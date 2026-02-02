@@ -355,3 +355,36 @@ function hover_cal_month(data, container, list_container, year) {
 
 generate_calendar( '#calendar', '#calendar_events');
 
+// for divider 
+
+
+const divider = document.getElementById('divider');
+const eventPanel = document.getElementById('event-panel');
+const calendarPanel = document.getElementById('calendar-panel');
+
+let isResizing = false;
+
+divider.addEventListener('mousedown', (e) => {
+  isResizing = true;
+  document.body.style.cursor = 'col-resize';
+});
+
+document.addEventListener('mousemove', (e) => {
+  if (!isResizing) return;
+  const totalWidth = document.getElementById('calendar-wrapper').offsetWidth;
+  let newEventWidth = e.clientX; // distance from left
+  let newCalendarWidth = totalWidth - newEventWidth - divider.offsetWidth;
+
+  // enforce min/max widths
+  if (newEventWidth < 200) newEventWidth = 200;
+  if (newEventWidth > 600) newEventWidth = 600;
+  if (newCalendarWidth < 300) newCalendarWidth = 300;
+
+  eventPanel.style.width = newEventWidth + 'px';
+  calendarPanel.style.width = newCalendarWidth + 'px';
+});
+
+document.addEventListener('mouseup', () => {
+  isResizing = false;
+  document.body.style.cursor = 'default';
+});
