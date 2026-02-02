@@ -3,6 +3,8 @@
 A lightweight enhancement for legacy **JS Year Calendar**.  
 Integrates **real-world event data** into your calendar UI, making it easier to display **holidays, company events, sprints, or custom schedules** in a **compact and readable year view**.
 
+Check the **live demo** here: [https://sudo-aa.github.io/JS_Year_Calendar_Integration/](https://sudo-aa.github.io/JS_Year_Calendar_Integration/)
+
 ---
 
 ## Features
