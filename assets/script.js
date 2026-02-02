@@ -348,28 +348,33 @@ function hover_cal_month(data, container, list_container, year) {
     });
 }
 
- function get_data (year){
-  let data_result= [] ;
+ function get_data_range(currentYear) {
+  let combined_data = [];
+  let global_id = 1;
+
+  for (let y = currentYear; y >= currentYear - 3; y--) {
     $.ajax({
-      url: "https://date.nager.at/api/v3/PublicHolidays/"+year+"/PH",
+      url: "https://date.nager.at/api/v3/PublicHolidays/" + y + "/PH",
       method: "GET",
       dataType: "json",
-      async: false,
+      async: false, // blocking on purpose for deterministic merge
       success: function(data) {
-        // Map API response to your raw_data structure
-         data_result = data.map((item, index) => ({
-          id: index + 1,
+        const mapped = data.map(item => ({
+          id: global_id++,
           event: item.name,
-          eventdate: item.date
+          eventdate: item.date,
+          year: y
         }));
 
-      
+        combined_data = combined_data.concat(mapped);
       },
       error: function(err) {
-        console.error("Failed to load holidays:", err);
+        console.error("Failed to load holidays for year", y, err);
       }
     });
-  return data_result;
+  }
+
+  return combined_data;
 }
 
 
