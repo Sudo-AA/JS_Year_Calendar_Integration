@@ -348,7 +348,7 @@ function hover_cal_month(data, container, list_container, year) {
     });
 }
 
- function get_data_range(currentYear) {
+ function get_data(currentYear) {
   let combined_data = [];
   let global_id = 1;
 
