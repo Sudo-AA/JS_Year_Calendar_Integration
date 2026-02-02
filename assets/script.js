@@ -357,28 +357,42 @@ generate_calendar( '#calendar', '#calendar_events');
 
 // for divider 
 
-
 const divider = document.getElementById('divider');
 const eventPanel = document.getElementById('event-panel');
 const calendarPanel = document.getElementById('calendar-panel');
+const wrapper = document.getElementById('calendar-wrapper');
 
 let isResizing = false;
 
-divider.addEventListener('mousedown', (e) => {
+const minEventWidth = 200;
+const maxEventWidth = 600;
+const minCalendarWidth = 300;
+
+divider.addEventListener('mousedown', () => {
   isResizing = true;
   document.body.style.cursor = 'col-resize';
 });
 
 document.addEventListener('mousemove', (e) => {
   if (!isResizing) return;
-  const totalWidth = document.getElementById('calendar-wrapper').offsetWidth;
-  let newEventWidth = e.clientX; // distance from left
+
+  const totalWidth = wrapper.offsetWidth;
+  let newEventWidth = e.clientX;
   let newCalendarWidth = totalWidth - newEventWidth - divider.offsetWidth;
 
-  // enforce min/max widths
-  if (newEventWidth < 200) newEventWidth = 200;
-  if (newEventWidth > 600) newEventWidth = 600;
-  if (newCalendarWidth < 300) newCalendarWidth = 300;
+  // enforce limits for both panels
+  if (newEventWidth < minEventWidth) {
+    newEventWidth = minEventWidth;
+    newCalendarWidth = totalWidth - newEventWidth - divider.offsetWidth;
+  }
+  if (newEventWidth > maxEventWidth) {
+    newEventWidth = maxEventWidth;
+    newCalendarWidth = totalWidth - newEventWidth - divider.offsetWidth;
+  }
+  if (newCalendarWidth < minCalendarWidth) {
+    newCalendarWidth = minCalendarWidth;
+    newEventWidth = totalWidth - newCalendarWidth - divider.offsetWidth;
+  }
 
   eventPanel.style.width = newEventWidth + 'px';
   calendarPanel.style.width = newCalendarWidth + 'px';
