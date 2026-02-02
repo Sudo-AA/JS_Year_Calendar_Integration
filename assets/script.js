@@ -1,4 +1,18 @@
 
+const cal_colors = [
+  '#2E8A8A', // electric teal
+  '#9A2E5F', // neon rose
+  '#3F3B6B', // deep indigo
+  '#8A8F2E', // neon olive
+  '#5C2D2D', // deep red clay
+  '#2D4F6B', // steel blue
+  '#9A5A2E', // neon copper
+  '#2F6B3F', // forest green
+  '#7A2E9A', // neon purple
+  '#6B4F1D', // dark amber
+  '#4A4A4A', // graphite neutral
+  '#2E5F8A'  // neon steel blue
+];
 
 
 let cal_current_year = new Date().getFullYear();
@@ -9,12 +23,17 @@ async function generate_calendar(container_id, list_con_id) {
   const currentYear = new Date().getFullYear();
 
   initCalendarStyles(container_id);
-  const calendarDataSource = cal_data.map((item) => ({
+const calendarDataSource = cal_data.map((item) => {
+  const date = new Date(item.eventdate);
+  const monthIndex = date.getMonth(); // 0 = Jan, 11 = Dec
+  return {
     id: item.id,
     name: item.event,
-    startDate: new Date(item.eventdate),
-    endDate: new Date(item.eventdate), // single-day event
-  }));
+    startDate: date,
+    endDate: date,
+    color: cal_colors[monthIndex]
+  };
+});
 
   new Calendar(container_id, {
     enableRangeSelection: true,
@@ -212,29 +231,29 @@ function populate_callist(data_val, containerSelector, year, monthName = null) {
   const day = eventDate.format('DD');
   const month = eventDate.format('MMM').toUpperCase();
   const year = eventDate.format('YYYY');
-
+  const monthIndex = eventDate.month(); // 0 = Jan, 11 = Dec
   const $li = $(`
-    <div class="list-group-item event-item d-flex align-items-start justify-content-between"
+    <div class="list-group-item event-item d-flex align-items-start justify-content-between border-0"
          style="
            padding:4px 8px;
            min-height:42px;
            line-height:1.15;
-           border:1px solid rgba(0,0,0,0.06);
-           box-shadow:0 1px 2px rgba(0,0,0,0.05);
+           margin-bottom: 1px;
+           box-shadow: 0 6px 6px -4px rgba(0,0,0,0.10);
            background:#fff;
          ">
       
       <!-- Day -->
-      <div style="font-size:1.1em; font-weight:600; width:28px; text-align:center; flex-shrink:0;">
+      <div style="color: ${cal_colors[monthIndex]};font-size:1.1em; font-weight:600; width:28px; text-align:center; flex-shrink:0;">
         ${day}
       </div>
 
       <!-- Month + Year -->
       <div class="text-center me-3 ms-1" style="line-height:1; flex-shrink:0;">
-        <div style="font-size:0.85em; text-transform:uppercase; font-weight:500;">
+        <div style="color: ${cal_colors[monthIndex]}; font-size:0.85em; text-transform:uppercase; font-weight:500;">
           ${month}
         </div>
-        <div style="font-size:0.78em; text-transform:uppercase; opacity:0.7;">
+        <div style="color: ${cal_colors[monthIndex]}; font-size:0.78em; text-transform:uppercase; opacity:0.7;">
           ${year}
         </div>
       </div>
@@ -242,8 +261,9 @@ function populate_callist(data_val, containerSelector, year, monthName = null) {
       <!-- Content -->
       <div class="flex-grow-1" style="min-width:0;">
         <div style="line-height:1.2;">
-          <span class="fw-semibold event-title"
+          <span class="event-title"
                 style="
+                  color: ${cal_colors[monthIndex]};
                   font-size:1.05em;
                   white-space:normal;
                   word-break:break-word;
@@ -354,6 +374,7 @@ function hover_cal_month(data, container, list_container, year) {
 
 
 generate_calendar( '#calendar', '#calendar_events');
+
 
 // for divider 
 
